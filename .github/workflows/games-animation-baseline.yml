@@ -1,0 +1,32 @@
+name: Games animation baseline verification
+
+on:
+  push:
+    branches:
+      - ci/games-animation-baseline-20261019
+
+permissions:
+  contents: read
+
+jobs:
+  baseline:
+    name: Unmodified upstream tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact upstream base
+        uses: actions/checkout@v6
+        with:
+          repository: Harborofficial/Harbor
+          ref: cd2a0aff335fb9936146b6434098a7e10b14a421
+          fetch-depth: 0
+      - name: Setup Vite+
+        uses: voidzero-dev/setup-vp@v1
+        with:
+          node-version: 24
+          cache: true
+          run-install: |
+            args:
+              - --frozen-lockfile
+      - name: Test unmodified upstream
+        run: vp run test
